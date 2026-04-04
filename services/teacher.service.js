@@ -1,6 +1,6 @@
 const { API_CONFIG } = require("../utils/config");
 const { request } = require("../utils/request");
-const { children } = require("./mock-db");
+const { children, addChild } = require("./mock-db");
 
 function getTeacherChildren() {
   if (API_CONFIG.useMock) {
@@ -26,7 +26,20 @@ function getChildDetail(name) {
   });
 }
 
+function createTeacherChild(child) {
+  if (API_CONFIG.useMock) {
+    return Promise.resolve(addChild(child));
+  }
+
+  return request({
+    url: "/teacher/children",
+    method: "POST",
+    data: child
+  });
+}
+
 module.exports = {
   getTeacherChildren,
-  getChildDetail
+  getChildDetail,
+  createTeacherChild
 };

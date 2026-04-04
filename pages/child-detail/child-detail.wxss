@@ -6,6 +6,8 @@
 .head {
   background: #f9c74f;
   padding: 84rpx 28rpx 24rpx;
+  padding-top: calc(84rpx + constant(safe-area-inset-top));
+  padding-top: calc(84rpx + env(safe-area-inset-top));
   color: #3d2e00;
 }
 
@@ -37,8 +39,11 @@
 }
 
 .body {
-  height: calc(100vh - 250rpx);
+  height: calc(100vh - 300rpx);
+  min-height: 0;
   padding: 18rpx;
+  box-sizing: border-box;
+  padding-bottom: calc(18rpx + env(safe-area-inset-bottom));
 }
 
 .section {

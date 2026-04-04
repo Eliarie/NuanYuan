@@ -1,4 +1,4 @@
-const { getTeacherChildren } = require("../../services/teacher.service");
+const { getTeacherChildren, createTeacherChild } = require("../../services/teacher.service");
 
 Page({
   data: {
@@ -6,7 +6,17 @@ Page({
     roleMeta: "李老师 · 小二班",
     children: [],
     showModal: false,
-    draftText: ""
+    draftText: "",
+    showAddModal: false,
+    statusOptions: ["需关注", "良好"],
+    addForm: {
+      name: "",
+      avatar: "👶",
+      status: "需关注",
+      focus: "",
+      strength: "",
+      note: ""
+    }
   },
 
   onLoad() {
@@ -33,6 +43,76 @@ Page({
     const name = e.currentTarget.dataset.name;
     wx.navigateTo({
       url: `/pages/child-detail/child-detail?name=${encodeURIComponent(name)}`
+    });
+  },
+
+  openAddChild() {
+    this.setData({
+      showAddModal: true,
+      addForm: {
+        name: "",
+        avatar: "👶",
+        status: "需关注",
+        focus: "",
+        strength: "",
+        note: ""
+      }
+    });
+  },
+
+  closeAddChild() {
+    this.setData({ showAddModal: false });
+  },
+
+  onAddFormInput(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    this.setData({
+      [`addForm.${field}`]: value
+    });
+  },
+
+  async confirmAddChild() {
+    const form = this.data.addForm;
+    if (!form.name.trim()) {
+      wx.showToast({ title: "请填写孩子姓名", icon: "none" });
+      return;
+    }
+
+    const newChild = {
+      name: form.name.trim(),
+      avatar: form.avatar.trim() || "👶",
+      status: form.status || "需关注",
+      statusClass: form.status === "良好" ? "green" : "amber",
+      draft: form.note.trim() || `您好！${form.name.trim()}的情况我已记录，后续会持续关注。`,
+      dims: [
+        { label: form.focus.trim() || "重点关注", val: form.status === "良好" ? 80 : 60 },
+        { label: form.strength.trim() || "优势发展", val: form.status === "良好" ? 88 : 72 },
+        { label: "认知能力", val: 75 },
+        { label: "生活习惯", val: 75 }
+      ],
+      timeline: [
+        { date: "今天", text: form.note.trim() || "已由老师新增档案，后续将持续观察。" }
+      ]
+    };
+
+    try {
+      await createTeacherChild(newChild);
+      this.setData({
+        children: [newChild, ...this.data.children],
+        showAddModal: false
+      });
+      wx.showToast({ title: "已新增孩子", icon: "success" });
+    } catch (error) {
+      wx.showToast({ title: "新增失败", icon: "none" });
+    }
+  },
+
+  onStatusChange(e) {
+    const value = Number(e.detail.value);
+    const status = this.data.statusOptions[value] || "需关注";
+    this.setData({
+      "addForm.status": status
     });
   },
 

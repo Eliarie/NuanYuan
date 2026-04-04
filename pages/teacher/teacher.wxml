@@ -22,7 +22,10 @@
 
     <block wx:if="{{activeTab === 1}}">
       <scroll-view scroll-y class="pane">
-        <view class="search card">孩子档案（点击查看详情）</view>
+        <view class="archive-head">
+          <view class="search card">孩子档案（点击查看详情）</view>
+          <button class="add-btn" bindtap="openAddChild">＋ 增加孩子</button>
+        </view>
         <view class="child-list">
           <view wx:for="{{children}}" wx:key="name" class="child card" data-name="{{item.name}}" bindtap="openChild">
             <view class="left">
@@ -63,6 +66,44 @@
     <view class="tab {{activeTab===1 ? 'on' : ''}}" data-idx="1" bindtap="switchTab">孩子档案</view>
     <view class="tab {{activeTab===2 ? 'on' : ''}}" data-idx="2" bindtap="switchTab">回顾</view>
     <view class="tab {{activeTab===3 ? 'on' : ''}}" data-idx="3" bindtap="switchTab">我的</view>
+  </view>
+
+  <view class="mask" wx:if="{{showAddModal}}" bindtap="closeAddChild">
+    <view class="sheet add-sheet" catchtap="noop">
+      <view class="sheet-title">新增孩子信息</view>
+      <view class="form-grid">
+        <view class="field">
+          <view class="field-label">孩子姓名</view>
+          <input class="field-input" placeholder="请输入姓名" data-field="name" value="{{addForm.name}}" bindinput="onAddFormInput" />
+        </view>
+        <view class="field">
+          <view class="field-label">头像</view>
+          <input class="field-input" placeholder="例如：🐯" data-field="avatar" value="{{addForm.avatar}}" bindinput="onAddFormInput" />
+        </view>
+        <view class="field">
+          <view class="field-label">状态</view>
+          <picker mode="selector" range="{{statusOptions}}" bindchange="onStatusChange">
+            <view class="field-picker">{{addForm.status}} ›</view>
+          </picker>
+        </view>
+        <view class="field full">
+          <view class="field-label">关注点</view>
+          <input class="field-input" placeholder="例如：分离焦虑" data-field="focus" value="{{addForm.focus}}" bindinput="onAddFormInput" />
+        </view>
+        <view class="field full">
+          <view class="field-label">优势标签</view>
+          <input class="field-input" placeholder="例如：语言表达" data-field="strength" value="{{addForm.strength}}" bindinput="onAddFormInput" />
+        </view>
+        <view class="field full">
+          <view class="field-label">备注</view>
+          <textarea class="field-textarea" placeholder="填写孩子的基础情况或首次记录" data-field="note" value="{{addForm.note}}" bindinput="onAddFormInput" maxlength="300" />
+        </view>
+      </view>
+      <view class="sheet-actions">
+        <button class="btn ghost" bindtap="closeAddChild">取消</button>
+        <button class="btn" bindtap="confirmAddChild">确认新增</button>
+      </view>
+    </view>
   </view>
 
   <view class="mask" wx:if="{{showModal}}" bindtap="closeDraft">
