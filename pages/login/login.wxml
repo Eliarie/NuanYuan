@@ -1,0 +1,27 @@
+<view class="container login-page">
+  <view class="center-wrap">
+    <view class="logo-card card">
+      <image class="brand-icon" src="/assets/logo01.png" mode="aspectFit" />
+      <image class="brand-wordmark" src="/assets/logo02.png" mode="aspectFit" />
+    </view>
+    <view class="slogan">Better Connections, Real Growth.</view>
+
+    <view class="role-list">
+      <view class="role-item card" bindtap="enterTeacher">
+        <view class="emoji">👩‍🏫</view>
+        <view>
+          <view class="title">我是老师</view>
+          <view class="desc">管理班级 · AI树洞 · 孩子档案</view>
+        </view>
+      </view>
+
+      <view class="role-item card" bindtap="enterParent">
+        <view class="emoji">👨‍👩‍👧</view>
+        <view>
+          <view class="title">我是家长</view>
+          <view class="desc">了解孩子 · 家园沟通 · 成长记录</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

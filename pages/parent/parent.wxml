@@ -1,0 +1,82 @@
+<view class="container parent-page">
+  <view class="top-head">
+    <view class="brand-line">
+      <image class="brand-mini" src="/assets/logo01.png" mode="aspectFit" />
+      <image class="brand-word" src="/assets/logo02.png" mode="aspectFit" />
+    </view>
+    <view class="meta">{{roleMeta}}</view>
+  </view>
+
+  <view class="body-wrap">
+    <block wx:if="{{activeTab === 0}}">
+      <scroll-view scroll-y class="pane">
+        <view class="child-head card">
+          <text class="avatar">👦</text>
+          <view>
+            <view class="name">小明</view>
+            <view class="desc">小二班 · 4岁2个月</view>
+          </view>
+        </view>
+
+        <view class="notice card">
+          <view class="n-title">老师有新消息</view>
+          <view class="n-text">您好！今天小明在玩具区和小朋友发生了一点小冲突。我们在园里正在帮助他练习用语言表达需求。如果在家也能配合练习，相信小明会进步得更快。</view>
+        </view>
+      </scroll-view>
+    </block>
+
+    <block wx:if="{{activeTab === 1}}">
+      <scroll-view scroll-y class="pane">
+        <view class="chat-list" id="chatAnchor">
+          <view wx:for="{{chatList}}" wx:key="idx" class="msg {{item.role}}">
+            <view class="bubble {{item.role}}">{{item.text}}</view>
+          </view>
+        </view>
+      </scroll-view>
+      <view class="input-row">
+        <input class="ipt" placeholder="问问育儿助手..." value="{{draft}}" bindinput="onInput" />
+        <view class="send" bindtap="sendMsg">发送</view>
+      </view>
+    </block>
+
+    <block wx:if="{{activeTab === 2}}">
+      <scroll-view scroll-y class="pane">
+        <view class="notice card">
+          <view class="n-title">告诉老师在家的情况</view>
+          <textarea class="ta" value="{{homeNote}}" bindinput="onNoteInput" maxlength="500" placeholder="比如：今天睡前情绪不好，哭了一会儿；在家练习了分享游戏。" />
+          <button class="btn" bindtap="submitNote">告诉老师</button>
+        </view>
+      </scroll-view>
+    </block>
+
+    <block wx:if="{{activeTab === 3}}">
+      <scroll-view scroll-y class="pane">
+        <view class="notice card">
+          <view class="n-title">成长回顾</view>
+          <view wx:for="{{reviewList}}" wx:key="title" class="review-item">
+            <view class="r-title">{{item.title}}</view>
+            <view class="r-text">{{item.content}}</view>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+
+    <block wx:if="{{activeTab === 4}}">
+      <scroll-view scroll-y class="pane">
+        <view class="profile card">
+          <view class="name">小明爸爸</view>
+          <view class="desc">家庭账号 · 已绑定小明</view>
+          <button class="btn ghost" bindtap="logout">退出登录</button>
+        </view>
+      </scroll-view>
+    </block>
+  </view>
+
+  <view class="tabbar">
+    <view class="tab {{activeTab===0 ? 'on' : ''}}" data-idx="0" bindtap="switchTab">孩子动态</view>
+    <view class="tab {{activeTab===1 ? 'on' : ''}}" data-idx="1" bindtap="switchTab">育儿助手</view>
+    <view class="tab {{activeTab===2 ? 'on' : ''}}" data-idx="2" bindtap="switchTab">告诉老师</view>
+    <view class="tab {{activeTab===3 ? 'on' : ''}}" data-idx="3" bindtap="switchTab">回顾</view>
+    <view class="tab {{activeTab===4 ? 'on' : ''}}" data-idx="4" bindtap="switchTab">我的</view>
+  </view>
+</view>

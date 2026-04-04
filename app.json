@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/teacher/teacher",
+    "pages/child-detail/child-detail",
+    "pages/parent/parent"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "light",
+    "backgroundColor": "#ebe4d6"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

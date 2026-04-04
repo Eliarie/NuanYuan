@@ -1,0 +1,70 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 44rpx;
+}
+
+.center-wrap {
+  width: 100%;
+  max-width: 680rpx;
+}
+
+.logo-card {
+  margin: 0 auto;
+  width: 420rpx;
+  padding: 42rpx 34rpx;
+  border-radius: 36rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18rpx;
+}
+
+.brand-icon {
+  width: 172rpx;
+  height: 172rpx;
+}
+
+.brand-wordmark {
+  width: 280rpx;
+  height: 62rpx;
+}
+
+.slogan {
+  text-align: center;
+  margin-top: 20rpx;
+  color: var(--muted);
+  font-size: 24rpx;
+  letter-spacing: 0.6rpx;
+}
+
+.role-list {
+  margin-top: 38rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 22rpx;
+}
+
+.role-item {
+  padding: 28rpx 30rpx;
+  border-radius: 26rpx;
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.emoji {
+  font-size: 54rpx;
+}
+
+.title {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.desc {
+  margin-top: 8rpx;
+  font-size: 24rpx;
+  color: var(--muted);
+}

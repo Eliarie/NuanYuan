@@ -1,0 +1,78 @@
+<view class="container teacher-page">
+  <view class="top-head">
+    <view class="brand-line">
+      <image class="brand-mini" src="/assets/logo01.png" mode="aspectFit" />
+      <image class="brand-word" src="/assets/logo02.png" mode="aspectFit" />
+    </view>
+    <view class="meta">{{roleMeta}}</view>
+  </view>
+
+  <view class="body-wrap">
+    <block wx:if="{{activeTab === 0}}">
+      <scroll-view scroll-y class="pane">
+        <view class="chat-list">
+          <view class="msg right"><view class="bubble teacher">今天小明又打人了，我真的很崩溃，不知道该怎么办了...</view></view>
+          <view class="msg left"><view class="bubble ai">听起来今天真的很累了，你已经很不容易了。小明上次也有类似情况，你当时试了冷处理，效果怎么样？</view></view>
+          <view class="msg right"><view class="bubble teacher">冷处理有点用，但不稳定</view></view>
+          <view class="msg left"><view class="bubble ai">可以试试在平稳时做角色扮演，练习“我想要这个玩具，可以借我吗？”。需要我帮你起草给家长的建议吗？</view></view>
+        </view>
+      </scroll-view>
+      <view class="send-parent card" bindtap="openDraft">发送给家长</view>
+    </block>
+
+    <block wx:if="{{activeTab === 1}}">
+      <scroll-view scroll-y class="pane">
+        <view class="search card">孩子档案（点击查看详情）</view>
+        <view class="child-list">
+          <view wx:for="{{children}}" wx:key="name" class="child card" data-name="{{item.name}}" bindtap="openChild">
+            <view class="left">
+              <text class="avatar">{{item.avatar}}</text>
+              <view>
+                <view class="c-name">{{item.name}}</view>
+                <view class="c-status {{item.statusClass}}">{{item.status}}</view>
+              </view>
+            </view>
+            <text class="arrow">›</text>
+          </view>
+        </view>
+      </scroll-view>
+    </block>
+
+    <block wx:if="{{activeTab === 2}}">
+      <scroll-view scroll-y class="pane">
+        <view class="summary card">
+          <view class="sum-title">AI 月度总结</view>
+          <view class="sum-text">本月你处理了 6 个个案，其中情绪管理 4 件。有效策略：冷处理 + 事后复盘。建议继续跟进小丽的分离焦虑。</view>
+        </view>
+      </scroll-view>
+    </block>
+
+    <block wx:if="{{activeTab === 3}}">
+      <scroll-view scroll-y class="pane">
+        <view class="profile card">
+          <view class="p-name">李老师</view>
+          <view class="p-meta">小二班主班教师 · 入职第3年</view>
+          <button class="btn ghost" bindtap="logout">退出登录</button>
+        </view>
+      </scroll-view>
+    </block>
+  </view>
+
+  <view class="tabbar">
+    <view class="tab {{activeTab===0 ? 'on' : ''}}" data-idx="0" bindtap="switchTab">树洞</view>
+    <view class="tab {{activeTab===1 ? 'on' : ''}}" data-idx="1" bindtap="switchTab">孩子档案</view>
+    <view class="tab {{activeTab===2 ? 'on' : ''}}" data-idx="2" bindtap="switchTab">回顾</view>
+    <view class="tab {{activeTab===3 ? 'on' : ''}}" data-idx="3" bindtap="switchTab">我的</view>
+  </view>
+
+  <view class="mask" wx:if="{{showModal}}" bindtap="closeDraft">
+    <view class="sheet" catchtap="noop">
+      <view class="sheet-title">发消息给家长</view>
+      <textarea class="ta" value="{{draftText}}" bindinput="onDraftInput" maxlength="500" />
+      <view class="sheet-actions">
+        <button class="btn ghost" bindtap="closeDraft">取消</button>
+        <button class="btn" bindtap="confirmSend">确认发送</button>
+      </view>
+    </view>
+  </view>
+</view>
