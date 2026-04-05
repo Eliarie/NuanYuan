@@ -44,12 +44,13 @@ nuanyuan/
 
 * **包管理器**: pnpm (基于 workspaces 的 monorepo)
 * **语言**: TypeScript (Strict 模式)
-* **前端框架**: Taro 3 + React 18
-* **前端样式**: Tailwind CSS (通过 weapp-tailwindcss 适配小程序)
-* **前端 UI**: 自定义无头组件 (禁止引入 Taro-UI 或其他第三方大前端 UI 库)，保持视觉系统的暖色调（奶白、暖黄搭配）与柔和感。**必须应用大圆角 (rounded-2xl/3xl)、暖色低透明度阴影 (如 box-shadow: 0 10px 20px rgba(77,58,29,.09))，避免生成直角或冷硬的极简风格**。
+* **前端框架**: Taro 3 + React 18。**跨端首选**：必须优先使用 Taro 提供的统一 API（如 `Taro.getStorage`），禁止直接使用单一平台特有 API（如 `wx.setStorageSync` 或浏览器 `window.localStorage`），最大化跨平台兼容性，避免跨端编译错误。
+* **前端样式**: Tailwind CSS (通过 weapp-tailwindcss 适配小程序)。**限制**：避免使用过于复杂的 Arbitrary Values (任意值，如 `w-[100.5px]`)，尽量使用标准工具类以防止小程序类名转换编译失败。
+* **前端 UI**: 自定义无头组件 (禁止引入 Taro-UI 或其他第三方大前端 UI 库)，所有的基础组件（如 Dialog, Popover）必须使用 Taro 原生的 <View>, <Text> 配合状态机手写实现。
+* **设计风格**: 保持视觉系统的暖色调（奶白、暖黄搭配）与柔和感。必须应用大圆角 (rounded-2xl/3xl)、暖色低透明度阴影 (如 box-shadow: 0 10px 20px rgba(77,58,29,.09))，避免生成直角或冷硬的极简风格。
 * **状态管理**: Zustand (严格限用于单纯的客户端 UI 状态管理，如弹窗、表单临时状态等)
-* **数据请求**: TanStack Query (React Query v5) (负责且唯一负责 Server State，包括所有 API 请求、缓存及数据同步。严禁在组件内使用 `useEffect` 裸写 fetch 取数据)
-* **后端运行时**: bun
+* **数据请求**: TanStack Query (React Query v5) (负责且唯一负责 Server State。**关键适配**：小程序没有原生 fetch，必须将 `Taro.request` 封装为 Promise，并作为全局唯一的 `queryFn` 注入到 QueryClient 中。严禁在组件内使用 `useEffect` 裸写请求)。
+* **后端运行时**: bun。**约束**：绝不在业务逻辑中使用 `Bun.file` 等 Bun 特有 API，必须使用标准 Node.js 模块 (如 `fs/promises`) 或标准 Web API，以保证随时无痛降级或切换至 Node.js 运行时。
 * **后端框架**: Hono
 * **数据库 ORM**: Prisma (连接 PostgreSQL)
 * **全栈验证**: Zod
@@ -71,6 +72,7 @@ nuanyuan/
 3. **通用大模型接口层 (LLM Gateway)**
    * **开放模型调度**：不要硬编码指定某个特定型号的 AI（如不限定 DeepSeek / Kimi）。
    * **标准对接**：建立全局的 `LLMService` 层。采用业内成熟且强大的 **Vercel AI SDK (`ai` npm package)** 进行大语言模型调度。该库具备良好的系统设计，要求利用核心方法（如 `streamText`/`generateText`）配合其内置的 `CoreMessage` 数组来进行对话及跨会话上下文生命周期管理。这将允许团队无缝穿插调度任何兼容标准的模型。
+   * **跨端流式对话通信**：在后端（Hono），必须将 `streamText` 结果转换为标准 Web Streams API 输出；在前端（小程序），严禁使用标准 Fetch API 接收流，**必须使用 `Taro.request` 且配置 `enableChunked: true` 来接收后端的流式数据**，并手动解析 chunk 完成打字机效果。
    * **多步链路拆分 (LLM Pipeline)**：业务具有“一边提供安抚响应，一边后台静默提取数据”的诉求。必须将两者独立调用：对话使用 `streamText`，结构化数据提取（生成推优/提取个案）使用 `generateObject` 结合 Zod Schema 保证输出稳定结构。严禁让大模型在一次对话请求中既输出情感话语又返回 JSON 字符串。
 
 ### 3.4 部署与运行环境 (Deployment)
