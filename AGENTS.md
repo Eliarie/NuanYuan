@@ -42,7 +42,7 @@ nuanyuan/
 
 ### 3.2 核心技术栈与依赖
 
-* **包管理器**: pnpm (基于 workspaces 的 monorepo)
+* **包管理器**: npm (基于 workspaces 的 monorepo)
 * **语言**: TypeScript (Strict 模式)
 * **前端框架**: Taro 4 + React 18。**跨端首选**：必须优先使用 Taro 提供的统一 API（如 `Taro.getStorage`），禁止直接使用单一平台特有 API（如 `wx.setStorageSync` 或浏览器 `window.localStorage`），最大化跨平台兼容性，避免跨端编译错误。
 * **前端样式**: Tailwind CSS (通过 weapp-tailwindcss 适配小程序)。**限制**：避免使用过于复杂的 Arbitrary Values (任意值，如 `w-[100.5px]`)，尽量使用标准工具类以防止小程序类名转换编译失败。
@@ -97,7 +97,7 @@ nuanyuan/
 当 AI 代理在处理本项目时，**绝对禁止**以下操作（触发则视为重大违背）：
 
 1. **严禁过度设计**：禁止引入如微服务架构、Kafka、K8s 等复杂的大型分布式组件（我们处于 MVP 阶段，模块解耦靠代码抽象而非物理隔离）。
-2. **严禁错误的环境指令**：后端严禁生成使用 `npm run` 或 `yarn` 启动及安装的指令，必须遵循 `bun` 的原生规范；全局依赖严禁破坏 `pnpm` monorepo 约束。
+2. **严禁错误的环境指令**：后端严禁生成使用 `yarn` 或 `pnpm` 启动及安装的指令；全局依赖严禁破坏 `npm` monorepo 约束。
 3. **严禁硬编码三方密钥**：任何 API Keys（微信密钥、大模型 Token、数据库 URL 等）绝对不能写死在代码中，必须从 `.env` 中提取，且强检验环境变量配置。
 4. **严禁数据越权流出**：教师端的“AI 树洞”原始情感倾诉（抱怨/吐槽文本）、初步转录文本等核心素材，**绝对不可**被封装至拉取给家长端查看的 API 响应体中。必须确保响应报文已被“端点数据切面 (DTO)”清洗。**数据库设计层面，必须物理隔离，将“树洞对话记录 (RawRecord)”与“家长可见记录 (SharedRecord)”设计为独立数据表**。
 5. **严禁直接绑定云厂商 SDK**：不允许业务代码最深处直接 `import { COS } from 'tencentcloud-sdk'`，必须走到我们自己设计的 `StorageService` 中。
