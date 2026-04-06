@@ -44,7 +44,7 @@ nuanyuan/
 
 * **包管理器**: pnpm (基于 workspaces 的 monorepo)
 * **语言**: TypeScript (Strict 模式)
-* **前端框架**: Taro 3 + React 18。**跨端首选**：必须优先使用 Taro 提供的统一 API（如 `Taro.getStorage`），禁止直接使用单一平台特有 API（如 `wx.setStorageSync` 或浏览器 `window.localStorage`），最大化跨平台兼容性，避免跨端编译错误。
+* **前端框架**: Taro 4 + React 18。**跨端首选**：必须优先使用 Taro 提供的统一 API（如 `Taro.getStorage`），禁止直接使用单一平台特有 API（如 `wx.setStorageSync` 或浏览器 `window.localStorage`），最大化跨平台兼容性，避免跨端编译错误。
 * **前端样式**: Tailwind CSS (通过 weapp-tailwindcss 适配小程序)。**限制**：避免使用过于复杂的 Arbitrary Values (任意值，如 `w-[100.5px]`)，尽量使用标准工具类以防止小程序类名转换编译失败。
 * **前端 UI**: 自定义无头组件 (禁止引入 Taro-UI 或其他第三方大前端 UI 库)，所有的基础组件（如 Dialog, Popover）必须使用 Taro 原生的 <View>, <Text> 配合状态机手写实现。
 * **设计风格**: 保持视觉系统的暖色调（奶白、暖黄搭配）与柔和感。必须应用大圆角 (rounded-2xl/3xl)、暖色低透明度阴影 (如 box-shadow: 0 10px 20px rgba(77,58,29,.09))，避免生成直角或冷硬的极简风格。

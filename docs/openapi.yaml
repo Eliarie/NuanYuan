@@ -1,0 +1,257 @@
+openapi: 3.0.3
+info:
+  title: NuanYuan API
+  description: |
+    暖园·家园共育系统 MVP API。
+    包含教师“树洞”吐槽及AI情绪安抚、后台静默清洗数据为家长可视内容的流程。
+    提供教师端、家长端的必要接口。
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: 默认本地 API 环境
+paths:
+  /auth/login:
+    post:
+      summary: 小程序登录
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - code
+              properties:
+                code:
+                  type: string
+                  description: 微信小程序 wx.login 获取的临时登录凭证
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  role:
+                    type: string
+                    enum: [teacher, parent]
+
+  /teacher/chat:
+    post:
+      summary: 教师“树洞”对话 (流式返回)
+      description: |
+        接收教师的一段吐槽文本。返回流式的安抚话语（AI 生成）。
+        **注意**：在后台会同时触发提取流水线，将原生文本转存入 `RawRecord` 表，并异步生成经过清洗的推送数据进入 `SharedRecord` 表。
+      tags:
+        - Teacher
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: 教师真实的槽点文本（如：“今天亮亮又死活不肯吃饭，闹腾死了”）
+      responses:
+        '200':
+          description: Vercel AI SDK 提供的文本流 (text/event-stream)
+          content:
+            text/event-stream:
+              schema:
+                type: string
+
+  /teacher/children:
+    get:
+      summary: 获取班级孩子列表
+      description: 教师查看本班孩子列表，包含维度概览。
+      tags:
+        - Teacher
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 孩子列表
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChildProfile'
+
+  /teacher/children/{id}:
+    get:
+      summary: 获取孩子详情及个案时间线
+      description: 教师查看特定孩子的成长维度及历史记录时间线。
+      tags:
+        - Teacher
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 孩子详细信息
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  profile:
+                    $ref: '#/components/schemas/ChildProfile'
+                  timeline:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimelineItem'
+
+  /teacher/messages/send:
+    post:
+      summary: 确认并发送消息给家长
+      description: 教师确认 AI 起草或自己修改后的消息，发送给家长。
+      tags:
+        - Teacher
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - childId
+                - content
+              properties:
+                childId:
+                  type: string
+                content:
+                  type: string
+                  description: 发送给家长的具体文案
+      responses:
+        '200':
+          description: 发送成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+
+  /parent/feed:
+    get:
+      summary: 家长查看在园动态与推送消息
+      description: |
+        家长获取自己小孩的经过清洗和提炼、正面积极的反馈记录及老师发送的通知。
+        **设计规范**：绝对不能包含任何 `RawRecord` 级别的数据字段，保障物理隔离与防止数据泄露。
+      tags:
+        - Parent
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: 经过 AI 美化与结构化的家校沟通内容及通知
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SharedRecord'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ChildProfile:
+      type: object
+      required:
+        - id
+        - name
+        - status
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        avatar:
+          type: string
+        status:
+          type: string
+          enum: ["良好", "需关注"]
+        tags:
+          type: array
+          items:
+            type: string
+        dimensions:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              score:
+                type: number
+    TimelineItem:
+      type: object
+      required:
+        - id
+        - date
+        - content
+        - type
+      properties:
+        id:
+          type: string
+        date:
+          type: string
+          format: date-time
+        content:
+          type: string
+        type:
+          type: string
+          enum: [observation, strategy, result, notification]
+    SharedRecord:
+      type: object
+      required:
+        - id
+        - childId
+        - originalDate
+        - highlight
+        - detail
+      properties:
+        id:
+          type: string
+          description: 公开记录的唯一 ID
+        childId:
+          type: string
+          description: 幼儿 ID
+        originalDate:
+          type: string
+          format: date-time
+          description: 记录发生的日期
+        highlight:
+          type: string
+          description: 高光时刻一句话摘要（如：“亮亮在饮食习惯上正在努力适应新环境，进步明显喔”）
+        detail:
+          type: string
+          description: 具体详细的正面反馈文案或打出的建议
+        type:
+          type: string
+          description: 记录类型
+          enum: [activity, message]
