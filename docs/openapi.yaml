@@ -40,13 +40,29 @@ paths:
                   role:
                     type: string
                     enum: [teacher, parent]
+                  classIds:
+                    type: array
+                    items:
+                      type: string
+                    description: 教师关联的班级ID列表（仅教师角色返回）
+                  children:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        role:
+                          type: string
+                          description: 家长角色（如爸爸、妈妈、爷爷等）
+                    description: 家长绑定的孩子列表及对应角色（仅家长角色返回）
 
   /teacher/chat:
     post:
       summary: 教师“树洞”对话 (流式返回)
       description: |
         接收教师的一段吐槽文本。返回流式的安抚话语（AI 生成）。
-        **注意**：在后台会同时触发提取流水线，将原生文本转存入 `RawRecord` 表，并异步生成经过清洗的推送数据进入 `SharedRecord` 表。
+        **注意**：在后台会同时触发提取流水线，将原生文本转存入 `RawRecord` 表（自动关联当前 Token 中的 `teacherId`，以便后续综合多名教师的意见），并异步生成经过清洗的推送数据进入 `SharedRecord` 表。
       tags:
         - Teacher
       security:
@@ -59,10 +75,14 @@ paths:
               type: object
               required:
                 - message
+                - classId
               properties:
                 message:
                   type: string
                   description: 教师真实的槽点文本（如：“今天亮亮又死活不肯吃饭，闹腾死了”）
+                classId:
+                  type: string
+                  description: 当前吐槽上下文所在的班级ID
       responses:
         '200':
           description: Vercel AI SDK 提供的文本流 (text/event-stream)
@@ -74,11 +94,18 @@ paths:
   /teacher/children:
     get:
       summary: 获取班级孩子列表
-      description: 教师查看本班孩子列表，包含维度概览。
+      description: 教师查看指定班级的孩子列表，包含维度概览。
       tags:
         - Teacher
       security:
         - bearerAuth: []
+      parameters:
+        - name: classId
+          in: query
+          required: true
+          schema:
+            type: string
+          description: 班级ID
       responses:
         '200':
           description: 孩子列表
@@ -208,6 +235,17 @@ components:
                 type: string
               score:
                 type: number
+        parents:
+          type: array
+          description: 绑定的家长列表
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              role:
+                type: string
+                description: 家长角色（如爸爸、妈妈、爷爷等）
     TimelineItem:
       type: object
       required:
@@ -226,6 +264,12 @@ components:
         type:
           type: string
           enum: [observation, strategy, result, notification]
+        teacherId:
+          type: string
+          description: 记录此条观察的教师ID
+        teacherName:
+          type: string
+          description: 记录此条观察的教师姓名
     SharedRecord:
       type: object
       required:
@@ -255,3 +299,29 @@ components:
           type: string
           description: 记录类型
           enum: [activity, message]
+    RawRecord:
+      type: object
+      required:
+        - id
+        - childId
+        - teacherId
+        - classId
+        - content
+        - createdAt
+      properties:
+        id:
+          type: string
+        childId:
+          type: string
+        teacherId:
+          type: string
+          description: 提交该记录的教师ID，用于区分不同教师的视角
+        classId:
+          type: string
+          description: 记录发生时的班级ID
+        content:
+          type: string
+          description: 教师原始的吐槽/语音转录文本
+        createdAt:
+          type: string
+          format: date-time
