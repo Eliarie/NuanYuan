@@ -2,19 +2,21 @@ import { View, Text } from '@tarojs/components'
 import Avatar from '../Avatar'
 
 export interface ChatBubbleProps {
-  type: 'teacher' | 'ai'
+  type?: 'teacher' | 'ai'
+  role?: 'user' | 'assistant'
   content: string
   avatarUrl?: string
   status?: 'sending' | 'success' | 'failed' // useful for later
+  time?: string
 }
 
-export const ChatBubble = ({ type, content, avatarUrl }: ChatBubbleProps) => {
-  const isTeacher = type === 'teacher'
+export const ChatBubble = ({ type, role, content, avatarUrl }: ChatBubbleProps) => {
+  const isTeacher = type === 'teacher' || role === 'user'
   
   return (
     <View className={`flex w-full mb-4 px-4 ${isTeacher ? 'flex-row-reverse' : 'flex-row'}`}>
       <View className="flex-shrink-0">
-        <Avatar src={avatarUrl} size="sm" fallback={isTeacher ? 'T' : 'AI'} className={isTeacher ? 'ml-3' : 'mr-3'} />
+        <Avatar src={avatarUrl} size="sm" text={isTeacher ? 'T' : 'AI'} className={isTeacher ? 'ml-3' : 'mr-3'} />
       </View>
       <View 
         className={`max-w-[75%] px-4 py-3 rounded-2xl ${

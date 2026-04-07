@@ -8,8 +8,8 @@ const MOCK_STATS = {
 }
 
 const MOCK_INSIGHTS = [
-  '近期班级情绪波动平稳，孩子们在户外活动时表现出强烈的探索欲。',
-  '针对轩轩和小明的冲突，建议安排合作类游戏以增强团队协作意识。'
+  { id: '1', content: '近期班级情绪波动平稳，孩子们在户外活动时表现出强烈的探索欲。', teacherName: '林老师' },
+  { id: '2', content: '针对轩轩和小明的冲突，建议安排合作类游戏以增强团队协作意识。', teacherName: '王老师' }
 ]
 
 export const Review = () => {
@@ -39,10 +39,15 @@ export const Review = () => {
            <Text className="text-[#e59554]">AI</Text> 综合洞察
         </Text>
         <View className="flex flex-col gap-3 relative z-10">
-          {MOCK_INSIGHTS.map((insight, index) => (
-            <View key={index} className="flex gap-3">
+          {MOCK_INSIGHTS.map((insight) => (
+            <View key={insight.id} className="flex gap-3">
               <View className="w-1.5 h-1.5 rounded-full bg-[#e59554] mt-2 shrink-0 opacity-80" />
-              <Text className="text-[15px] text-[#645c4e] leading-relaxed break-words block">{insight}</Text>
+              <View className="flex-1">
+                <Text className="text-[15px] text-[#645c4e] leading-relaxed break-words block">{insight.content}</Text>
+                {insight.teacherName && (
+                  <Text className="text-[12px] text-[#a3a09a] mt-1 block">记录人: {insight.teacherName}</Text>
+                )}
+              </View>
             </View>
           ))}
         </View>

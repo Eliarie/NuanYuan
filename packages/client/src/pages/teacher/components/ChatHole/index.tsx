@@ -1,6 +1,7 @@
 import { View, Text, ScrollView } from '@tarojs/components'
 import { useState } from 'react'
 import ChatBubble from '../../../../components/ChatBubble'
+import { useTeacherStore } from '../../../../store/teacher'
 
 // Mock Data
 const MOCK_MESSAGES = [
@@ -12,6 +13,12 @@ const MOCK_MESSAGES = [
 export const ChatHole = () => {
   const [messages] = useState(MOCK_MESSAGES)
   const [inputMode, setInputMode] = useState<'text' | 'voice'>('voice')
+  const currentClassId = useTeacherStore(state => state.currentClassId)
+
+  const handleSend = () => {
+    // TODO: 实际发送请求时，附带 currentClassId
+    console.log('Sending message for class:', currentClassId)
+  }
 
   return (
     <View className="flex flex-col h-full bg-[#fbfaf8]">
@@ -28,13 +35,18 @@ export const ChatHole = () => {
       {/* Input Area Mock */}
       <View className="w-full bg-white pb-safe pt-2 px-4 shadow-[0_-4px_16px_rgba(77,58,29,0.04)] rounded-t-3xl border-t border-[#ebe7de]/30">
         <View className="flex flex-row items-center gap-2 mb-2">
-            
           {inputMode === 'voice' ? (
-             <View className="flex-1 h-11 bg-[#f5f3ec] rounded-full flex items-center justify-center border-none">
+             <View
+               className="flex-1 h-11 bg-[#f5f3ec] rounded-full flex items-center justify-center border-none"
+               onClick={handleSend}
+             >
                  <Text className="text-[#8d8a85] font-medium text-[15px]">按住 说话</Text>
              </View>
           ) : (
-             <View className="flex-1 bg-[#f5f3ec] rounded-2xl px-4 py-3 border-none flex items-center">
+             <View
+               className="flex-1 bg-[#f5f3ec] rounded-2xl px-4 py-3 border-none flex items-center"
+               onClick={handleSend}
+             >
                  <Text className="text-[#8d8a85] text-[15px]">我也说点什么...</Text>
              </View>
           )}

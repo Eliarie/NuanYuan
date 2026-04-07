@@ -15,7 +15,7 @@ export const Mine = () => {
     <ScrollView scrollY className="h-full bg-[#fbfaf8] p-4">
       <View className="flex flex-col items-center pt-8 pb-6">
         <View className="relative mb-4">
-          <Avatar src={MOCK_USER.avatar} fallback={MOCK_USER.name[0]} size="lg" className="w-24 h-24 text-[32px] border-4 border-white shadow-md shadow-[#4d3a1d]/10" />
+          <Avatar src={MOCK_USER.avatar} text={MOCK_USER.name[0]} size="lg" className="w-24 h-24 text-[32px] border-4 border-white shadow-md shadow-[#4d3a1d]/10" />
           <View className="absolute bottom-0 right-0 bg-[#e59554] w-7 h-7 rounded-full flex items-center justify-center border-2 border-white">
             <Text className="text-white text-[12px] font-bold">V</Text>
           </View>
