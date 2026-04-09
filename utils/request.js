@@ -13,6 +13,7 @@ function request(options = {}) {
       url: `${API_CONFIG.baseURL}${url}`,
       method,
       data,
+      timeout: 10000,
       header: {
         "Content-Type": "application/json",
         ...header

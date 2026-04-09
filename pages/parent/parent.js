@@ -9,10 +9,33 @@ Page({
     roleMeta: "小明爸爸 · 小明成长",
     draft: "",
     homeNote: "",
+    submitText: "告诉老师 💬",
+    childInfo: {
+      avatar: "👦",
+      name: "小朋友",
+      className: "",
+      age: "",
+      desc: ""
+    },
+    teacherMessage: {
+      tag: "🔔 老师有新消息",
+      content: "",
+      time: "",
+      teacherName: ""
+    },
+    activities: [],
+    cooperationTip: {
+      tag: "📌 老师的配合建议",
+      content: "",
+      time: "",
+      teacherName: ""
+    },
     reviewList: [],
+    reviewDims: [],
     aiReplies: [],
     aiIndex: 0,
-    chatList: []
+    chatList: [],
+    chatAnchor: ""
   },
 
   onLoad() {
@@ -22,10 +45,17 @@ Page({
   async loadBootstrap() {
     try {
       const result = await getParentBootstrap();
+      const chatList = result.chatList || [];
       this.setData({
-        chatList: result.chatList || [],
+        chatList,
         reviewList: result.reviewList || [],
-        aiReplies: result.aiReplies || []
+        reviewDims: result.reviewDims || [],
+        aiReplies: result.aiReplies || [],
+        childInfo: result.childInfo || this.data.childInfo,
+        teacherMessage: result.teacherMessage || this.data.teacherMessage,
+        activities: result.activities || [],
+        cooperationTip: result.cooperationTip || this.data.cooperationTip,
+        chatAnchor: chatList.length ? `msg-${chatList.length - 1}` : ""
       });
     } catch (error) {
       wx.showToast({ title: "页面数据加载失败", icon: "none" });
@@ -34,7 +64,7 @@ Page({
 
   switchTab(e) {
     const idx = Number(e.currentTarget.dataset.idx);
-    const metas = ["小明爸爸 · 小明成长", "育儿AI助手", "告诉老师", "成长回顾", "我的"];
+    const metas = ["小明爸爸 · 小明成长", "育儿AI助手", "告诉老师", "成长回顾"];
     this.setData({ activeTab: idx, roleMeta: metas[idx] });
   },
 
@@ -57,7 +87,8 @@ Page({
     this.setData({
       chatList: list,
       draft: "",
-      aiIndex: this.data.aiIndex + 1
+      aiIndex: this.data.aiIndex + 1,
+      chatAnchor: `msg-${list.length - 1}`
     });
   },
 
@@ -70,10 +101,13 @@ Page({
       wx.showToast({ title: "请先输入内容", icon: "none" });
       return;
     }
+
     try {
       await submitParentNote(this.data.homeNote.trim());
-      wx.showToast({ title: "已告诉老师", icon: "success" });
-      this.setData({ homeNote: "" });
+      this.setData({ submitText: "已告诉老师 ✓", homeNote: "" });
+      setTimeout(() => {
+        this.setData({ submitText: "告诉老师 💬" });
+      }, 1200);
     } catch (error) {
       wx.showToast({ title: "发送失败，请重试", icon: "none" });
     }

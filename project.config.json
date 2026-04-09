@@ -37,7 +37,19 @@
   "condition": {},
   "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "node_modules" },
+      { "type": "folder", "value": "packages" },
+      { "type": "folder", "value": "docs" },
+      { "type": "glob", "value": "NuanYuan logo*.png" },
+      { "type": "glob", "value": "nuanyuan-prototype.html" },
+      { "type": "glob", "value": "我的页面.jpg" },
+      { "type": "glob", "value": "README.md" },
+      { "type": "glob", "value": "项目落地与提交清单.md" },
+      { "type": "glob", "value": "package-lock.json" },
+      { "type": "glob", "value": "**/*.md" },
+      { "type": "glob", "value": "**/*.map" }
+    ],
     "include": []
   },
   "editorSetting": {}

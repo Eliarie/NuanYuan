@@ -11,7 +11,8 @@ Page({
       timeline: []
     },
     showModal: false,
-    draftText: ""
+    draftText: "",
+    sendBtnText: "确认发送 ✉️"
   },
 
   async onLoad(options) {
@@ -29,11 +30,11 @@ Page({
   },
 
   openDraft() {
-    this.setData({ showModal: true });
+    this.setData({ showModal: true, sendBtnText: "确认发送 ✉️" });
   },
 
   closeDraft() {
-    this.setData({ showModal: false });
+    this.setData({ showModal: false, sendBtnText: "确认发送 ✉️" });
   },
 
   onDraftInput(e) {
@@ -41,8 +42,11 @@ Page({
   },
 
   confirmSend() {
-    wx.showToast({ title: "已发送", icon: "success" });
-    this.setData({ showModal: false });
+    this.setData({ sendBtnText: "已发送 ✓" });
+    setTimeout(() => {
+      this.setData({ showModal: false, sendBtnText: "确认发送 ✉️" });
+      wx.showToast({ title: "已发送", icon: "success" });
+    }, 800);
   },
 
   noop() {}

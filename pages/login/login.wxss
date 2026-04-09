@@ -1,8 +1,10 @@
 .login-page {
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 44rpx;
+  background: linear-gradient(160deg, #f4ecd8 0%, #fbf6ea 76%);
 }
 
 .center-wrap {
@@ -12,8 +14,8 @@
 
 .logo-card {
   margin: 0 auto;
-  width: 420rpx;
-  padding: 42rpx 34rpx;
+  width: 430rpx;
+  padding: 44rpx 34rpx;
   border-radius: 36rpx;
   display: flex;
   flex-direction: column;
@@ -22,36 +24,37 @@
 }
 
 .brand-icon {
-  width: 172rpx;
-  height: 172rpx;
+  width: 180rpx;
+  height: 180rpx;
 }
 
 .brand-wordmark {
   width: 280rpx;
-  height: 62rpx;
+  height: 64rpx;
 }
 
 .slogan {
   text-align: center;
   margin-top: 20rpx;
-  color: var(--muted);
+  color: #8e8677;
   font-size: 24rpx;
   letter-spacing: 0.6rpx;
 }
 
 .role-list {
-  margin-top: 38rpx;
+  margin-top: 42rpx;
   display: flex;
   flex-direction: column;
   gap: 22rpx;
 }
 
 .role-item {
-  padding: 28rpx 30rpx;
+  padding: 30rpx;
   border-radius: 26rpx;
   display: flex;
   align-items: center;
   gap: 20rpx;
+  border: 1px solid #efe6d7;
 }
 
 .emoji {
@@ -61,10 +64,11 @@
 .title {
   font-size: 32rpx;
   font-weight: 700;
+  color: #2f2c2a;
 }
 
 .desc {
   margin-top: 8rpx;
   font-size: 24rpx;
-  color: var(--muted);
+  color: #8e8677;
 }
