@@ -17,6 +17,22 @@ const children = [
     draft: "您好！今天小明在玩具区和小朋友发生了一点小冲突。我们在园里正在帮助他练习用语言表达需求，比如'我想要这个玩具，可以借我吗？'。如果在家也能配合练习这个句式，相信小明会进步得更快。",
     timeline: [
       {
+        id: "timeline-009",
+        date: "2026-03-27T14:40:00.000Z",
+        content: "午休前出现争执，先陪他做深呼吸，再引导复述需求，3分钟内恢复。",
+        type: "observation",
+        teacherId: "teacher-002",
+        teacherName: "王老师"
+      },
+      {
+        id: "timeline-010",
+        date: "2026-03-26T11:20:00.000Z",
+        content: "区域活动中能主动说出'我先等一下'，等待时长明显提升。",
+        type: "result",
+        teacherId: "teacher-003",
+        teacherName: "张老师"
+      },
+      {
         id: "timeline-001",
         date: "2026-03-25T09:30:00.000Z",
         content: "争抢玩具时推倒同学，情绪激动约 5 分钟后平复。尝试冷处理，有效但需强化。",
@@ -201,6 +217,91 @@ const parentInitialChat = [
   }
 ];
 
+function getChildById(childId) {
+  if (!childId) {
+    return children[0];
+  }
+  return children.find(item => item.id === childId) || children[0];
+}
+
+function sortTimelineDesc(timeline) {
+  return [...(timeline || [])].sort((a, b) => {
+    return new Date(b.date).getTime() - new Date(a.date).getTime();
+  });
+}
+
+function buildParentAggregateData(childId) {
+  const child = getChildById(childId);
+  const sortedTimeline = sortTimelineDesc(child.timeline);
+  const teacherNames = [...new Set(sortedTimeline.map(item => item.teacherName).filter(Boolean))];
+  const teacherCount = teacherNames.length;
+  const latest = sortedTimeline[0] || {};
+  const recentThree = sortedTimeline.slice(0, 3);
+
+  const parentChildInfo = {
+    id: child.id,
+    name: child.name,
+    avatar: child.avatar,
+    className: "小二班",
+    age: "4岁2个月"
+  };
+
+  const parentTeacherMessage = {
+    id: `msg-${child.id}`,
+    childId: child.id,
+    originalDate: latest.date,
+    highlight: `班级${teacherCount}位老师联合观察`,
+    detail: `${teacherNames.join("、")}联合反馈：${latest.content || "今日状态稳定"}`,
+    type: "message",
+    tag: `🔔 ${teacherCount}位老师联合反馈`,
+    teacherName: teacherNames.join("、")
+  };
+
+  const parentActivities = sortedTimeline.slice(0, 6).map((item, idx) => ({
+    id: `act-${child.id}-${idx + 1}`,
+    childId: child.id,
+    originalDate: item.date,
+    highlight: `${item.teacherName}记录`,
+    detail: `${item.teacherName}：${item.content}`,
+    type: "activity"
+  }));
+
+  const parentReviewList = [
+    {
+      title: "联合观察亮点",
+      content: `${teacherNames.join("、")}一致观察到：${recentThree[0] ? recentThree[0].content : "本周状态平稳"}`
+    },
+    {
+      title: "个案追踪进展",
+      content: `最近${recentThree.length}条关键记录由${teacherCount}位老师共同补充，便于形成连续追踪。`
+    },
+    {
+      title: "下周共育重点",
+      content: "继续强化语言替代与轮流规则，家园同步使用一致句式，避免规则不一致。"
+    }
+  ];
+
+  const parentCooperationTip = {
+    id: `tip-${child.id}`,
+    childId: child.id,
+    originalDate: latest.date,
+    highlight: "老师的配合建议",
+    detail: "在家遇到冲突时，先帮助孩子说出情绪，再引导一句需求表达，最后复盘做得好的地方。",
+    type: "message",
+    tag: "📌 老师的配合建议",
+    teacherName: teacherNames.join("、")
+  };
+
+  return {
+    parentChildInfo,
+    parentTeacherMessage,
+    parentActivities,
+    parentReviewList,
+    parentCooperationTip,
+    parentReviewDimensions: child.dimensions || []
+  };
+}
+
 const parentReviewList = [
   {
     title: "本周成长亮点",
@@ -299,6 +400,8 @@ function addChild(child) {
 module.exports = {
   children,
   addChild,
+  getChildById,
+  buildParentAggregateData,
   parentAiReplies,
   parentInitialChat,
   parentReviewList,

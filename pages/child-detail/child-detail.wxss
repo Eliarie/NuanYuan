@@ -123,6 +123,10 @@
   color: #b0a060;
 }
 
+.tl-teacher {
+  color: #8f7f4f;
+}
+
 .tl-text {
   margin-top: 2rpx;
   font-size: 24rpx;

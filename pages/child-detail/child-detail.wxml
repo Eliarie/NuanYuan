@@ -26,7 +26,7 @@
           <view class="line" wx:if="{{index < child.timeline.length - 1}}"></view>
         </view>
         <view>
-          <view class="tl-date">{{item.date}}</view>
+          <view class="tl-date">{{item.date}}<text wx:if="{{item.teacherName}}" class="tl-teacher"> · {{item.teacherName}}</text></view>
           <view class="tl-text">{{item.text}}</view>
         </view>
       </view>
