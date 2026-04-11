@@ -1,0 +1,15 @@
+{
+  "name": "nuanyuan",
+  "version": "1.0.0",
+  "description": "NuanYuan Monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

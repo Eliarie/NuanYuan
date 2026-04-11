@@ -1,9 +1,0 @@
-{
-  "desc": "NuanYuan mini program sitemap",
-  "rules": [
-    {
-      "action": "allow",
-      "page": "*"
-    }
-  ]
-}

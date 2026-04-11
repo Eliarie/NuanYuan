@@ -1,0 +1,145 @@
+<view class="container parent-page">
+
+  <!-- ── Header ── -->
+  <view class="top-head">
+    <view class="brand-stack">
+      <view class="brand-line">
+        <image class="brand-mini" src="/assets/logo01.png" mode="aspectFit" />
+        <image class="brand-word" src="/assets/logo02.png" mode="aspectFit" />
+      </view>
+      <view class="brand-slogan">让家园沟通更温柔、更清晰</view>
+    </view>
+    <view class="meta">{{roleMeta}}</view>
+  </view>
+
+  <!-- ── Body ── -->
+  <view class="body-wrap">
+
+    <!-- Tab 0: 孩子动态 -->
+    <block wx:if="{{activeTab === 0}}">
+      <scroll-view scroll-y class="pane">
+
+        <view class="child-head">
+          <view class="child-avatar">{{childInfo.avatar}}</view>
+          <view>
+            <view class="child-name">{{childInfo.name}}</view>
+            <view class="child-desc">{{childInfo.desc}}</view>
+          </view>
+        </view>
+
+        <view class="notice-card">
+          <view class="notice-tag">{{teacherMessage.tag}}</view>
+          <view class="notice-text">{{teacherMessage.content}}</view>
+          <view class="notice-time">{{teacherMessage.time}} · {{teacherMessage.teacherName}}</view>
+        </view>
+
+        <view class="sec-title">📅 在园动态</view>
+        <view class="act-list">
+          <view wx:for="{{activities}}" wx:key="id" class="act-card">
+            <view class="act-date">{{item.date}}</view>
+            <view class="act-text">{{item.content}}</view>
+          </view>
+        </view>
+
+      </scroll-view>
+    </block>
+
+    <!-- Tab 1: 育儿助手 -->
+    <block wx:if="{{activeTab === 1}}">
+      <view class="chat-wrap">
+        <scroll-view scroll-y class="pane chat-pane" scroll-into-view="{{chatAnchor}}">
+          <view wx:for="{{chatList}}" wx:key="index" class="msg {{item.role}}" id="msg-{{index}}">
+            <view wx:if="{{item.role === 'ai'}}" class="ai-avatar">🤖</view>
+            <view class="bubble {{item.role}}">{{item.text}}</view>
+          </view>
+        </scroll-view>
+        <view class="input-row">
+          <input class="ipt" placeholder="问问育儿助手…" value="{{draft}}" bindinput="onInput" confirm-type="send" bindconfirm="sendMsg" />
+          <view class="send-btn" bindtap="sendMsg">➤</view>
+        </view>
+      </view>
+    </block>
+
+    <!-- Tab 2: 告诉老师 -->
+    <block wx:if="{{activeTab === 2}}">
+      <scroll-view scroll-y class="pane">
+
+        <view class="notice-card" style="margin-bottom:20rpx">
+          <view class="notice-tag">{{cooperationTip.tag}}</view>
+          <view class="notice-text">{{cooperationTip.content}}</view>
+          <view class="notice-time">{{cooperationTip.time}} · {{cooperationTip.teacherName}}</view>
+        </view>
+
+        <view class="sec-title">✏️ 告诉老师在家的情况</view>
+        <textarea class="ta" value="{{homeNote}}" bindinput="onNoteInput" maxlength="500"
+          placeholder="比如：今天睡前情绪不好，哭了一会儿；在家练习了分享游戏…" auto-height />
+        <button class="submit-btn" bindtap="submitNote">{{submitText}}</button>
+
+      </scroll-view>
+    </block>
+
+    <!-- Tab 3: 成长回顾 -->
+    <block wx:if="{{activeTab === 3}}">
+      <scroll-view scroll-y class="pane">
+
+        <!-- 孩子信息卡 -->
+        <view class="review-hero">
+          <view class="rh-avatar">{{childInfo.avatar}}</view>
+          <view>
+            <view class="rh-name">{{childInfo.name}}</view>
+            <view class="rh-desc">{{childInfo.desc}}</view>
+          </view>
+        </view>
+
+        <!-- 本周亮点 -->
+        <view class="review-section-title">🌟 本周成长亮点</view>
+        <view wx:for="{{reviewList}}" wx:key="title" class="review-card">
+          <view class="rv-title">{{item.title}}</view>
+          <view class="rv-content">{{item.content}}</view>
+        </view>
+
+        <!-- 发展维度 -->
+        <view class="review-section-title">📊 发展维度概览</view>
+        <view class="dim-overview">
+          <view wx:for="{{reviewDims}}" wx:key="label" class="dim-row">
+            <text class="dim-label">{{item.label}}</text>
+            <view class="dim-bar">
+              <view class="dim-fill" style="width:{{item.val}}%"></view>
+            </view>
+            <text class="dim-val">{{item.val}}</text>
+          </view>
+        </view>
+
+        <!-- 家园共育建议 -->
+        <view class="review-section-title">💡 家园共育建议</view>
+        <view class="tip-card">
+          <view class="tip-text">{{cooperationTip.content}}</view>
+        </view>
+
+      </scroll-view>
+    </block>
+
+  </view>
+
+  <!-- ── Tab Bar ── -->
+  <view class="tabbar">
+    <view class="tab {{activeTab===0 ? 'on' : ''}}" data-idx="0" bindtap="switchTab">
+      <view class="tab-icon icon-child"></view>
+      <text>孩子动态</text>
+    </view>
+    <view class="tab {{activeTab===1 ? 'on' : ''}}" data-idx="1" bindtap="switchTab">
+      <view class="tab-icon icon-chat"></view>
+      <text>育儿助手</text>
+    </view>
+    <view class="tab {{activeTab===2 ? 'on' : ''}}" data-idx="2" bindtap="switchTab">
+      <view class="tab-icon icon-chat"></view>
+      <text>告诉老师</text>
+    </view>
+    <view class="tab {{activeTab===3 ? 'on' : ''}}" data-idx="3" bindtap="switchTab">
+      <view class="tab-icon icon-stats"></view>
+      <text>成长回顾</text>
+    </view>
+  </view>
+
+</view>
+

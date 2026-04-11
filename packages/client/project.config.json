@@ -1,0 +1,89 @@
+{
+  "miniprogramRoot": "./",
+  "projectname": "NuanYuan",
+  "description": "暖元家园共育系统小程序原型落地版",
+  "appid": "wx4bb74baa0c230ca7",
+  "compileType": "miniprogram",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "showShadowRootInWxmlPanel": true,
+    "packNpmManually": false,
+    "ignoreUploadUnusedFiles": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "libVersion": "3.6.8",
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      {
+        "value": "node_modules",
+        "type": "folder"
+      },
+      {
+        "value": "packages",
+        "type": "folder"
+      },
+      {
+        "value": "docs",
+        "type": "folder"
+      },
+      {
+        "value": "NuanYuan logo*.png",
+        "type": "glob"
+      },
+      {
+        "value": "nuanyuan-prototype.html",
+        "type": "glob"
+      },
+      {
+        "value": "我的页面.jpg",
+        "type": "glob"
+      },
+      {
+        "value": "README.md",
+        "type": "glob"
+      },
+      {
+        "value": "项目落地与提交清单.md",
+        "type": "glob"
+      },
+      {
+        "value": "package-lock.json",
+        "type": "glob"
+      },
+      {
+        "value": "**/*.md",
+        "type": "glob"
+      },
+      {
+        "value": "**/*.map",
+        "type": "glob"
+      }
+    ],
+    "include": []
+  },
+  "editorSetting": {}
+}
